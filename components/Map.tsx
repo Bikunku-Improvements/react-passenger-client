@@ -67,7 +67,7 @@ import { BASE_URL } from "../components/constant/urls"
 interface MapProps {
   children: ReactNode;
 }
-const ws = new WebSocket(`ws://localhost:8000/bus/stream?type=client`);
+const ws = new WebSocket(`wss://bikunku-be.fly.dev/bus/stream?type=client`);
 
 export default function Map(props: MapProps) {
   // Variabel helper
