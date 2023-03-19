@@ -13,7 +13,7 @@ import jadwalNotFound from "../public/assets/image/jadwalNotFound.svg";
 import halteNotFound from "../public/assets/image/halteNotFoundBG.svg";
 import position from "../public/assets/icon/position.svg";
 import { useRouter } from "next/router";
-
+import { BASE_URL } from "../components/constant/urls"
 
 export default function jadwalbikun() {
   const [isFilter, setIsFilter] = useState(false);
@@ -101,7 +101,7 @@ export default function jadwalbikun() {
       lat: -6.361046716889507,
       long: 106.8317240044786,
     };
-    const req = fetch("https://api.bikunku.com/terminal/allTerminal", {
+    const req = fetch(`${BASE_URL}/terminal/allTerminal`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
