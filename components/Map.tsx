@@ -108,6 +108,12 @@ export default function Map(props: MapProps) {
     setIscenterd(false);
     setIsHalteClicked(false);
     const message = JSON.parse(evt.data);
+    console.log(message)
+    const now = new Date().getTime()
+    const created = new Date(message[0].Timestamp).getTime()
+    console.log("Now:", new Date(now).toString(), now)
+    console.log("Created:", new Date(Math.trunc(created)).toString(), created)
+    console.log("Latency:", now - created)
     setBus(message);
   };
 
