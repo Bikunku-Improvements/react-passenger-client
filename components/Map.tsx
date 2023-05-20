@@ -62,7 +62,7 @@ import gambar6 from "../public/assets/image/donts/6.svg";
 import halteNotFound from "../public/assets/image/halteNotFoundBG.svg";
 import Link from "next/link";
 import "leaflet-routing-machine";
-import { BASE_URL } from "../components/constant/urls"
+import { BASE_URL } from "../components/constant/urls";
 
 interface MapProps {
   children: ReactNode;
@@ -80,7 +80,7 @@ export default function Map(props: MapProps) {
   const [bus, setBus] = useState([]);
   const [activeTabIndex, setActiveTabIndex] = useState(0);
   const [isCentered, setIscenterd] = useState(false);
-  const [isUserPosition,setIsUserPosition] = useState(false);
+  const [isUserPosition, setIsUserPosition] = useState(false);
   const [isHalteClicked, setIsHalteClicked] = useState(false);
   const [isBanner, setIsBanner] = useState(true);
   const [isDonts, setIsDonts] = useState(true);
@@ -99,19 +99,18 @@ export default function Map(props: MapProps) {
   const arrayRute = ["Semua", "Rute Lurus", "Rute Kanan"];
 
   // Messaing Websocket
-  ws.onopen = () => {
-  };
+  ws.onopen = () => {};
   ws.onmessage = (evt) => {
     // console.log(evt.data);
     console.log(bus);
     const message = JSON.parse(evt.data);
-    console.log(message)
-    const now = new Date().getTime()
-    const created = new Date(message[0].Timestamp).getTime()
-    console.log("Now:", new Date(now).toString(), now)
-    console.log("Created:", new Date(Math.trunc(created)).toString(), created)
-    console.log("Latency:", now - created)
-    
+    console.log(message);
+    const now = new Date().getTime();
+    const created = new Date(message[0].Timestamp).getTime();
+    console.log("Now:", new Date(now).toString(), now);
+    console.log("Created:", new Date(Math.trunc(created)).toString(), created);
+    console.log("Latency:", now - created);
+
     setIscenterd(false);
     setIsHalteClicked(false);
     setBus(message);
@@ -121,20 +120,8 @@ export default function Map(props: MapProps) {
     const HalteClickedById = halteAll.features.filter(
       (e: any) => e.properties.PARK_ID === id
     );
-    setActivePark(HalteClickedById[0])
+    setActivePark(HalteClickedById[0]);
   };
-  
-
-  // Check already onboarding
-  useEffect(() => {
-    if (getCookies().isOnboarding || window.screen.width > 768 ) {
-    } else {
-      router.push({
-        pathname: "/onBoarding",
-      });
-    }
-    fetchAllHalte();
-  }, []);
 
   // switch rute on maps
   const handleRute = () => {
@@ -164,7 +151,7 @@ export default function Map(props: MapProps) {
       setLng(position.coords.longitude);
     });
     setIsUserPosition(true);
-    fetchAllHalte()
+    fetchAllHalte();
   };
 
   // recenter map with user position
@@ -178,9 +165,7 @@ export default function Map(props: MapProps) {
 
   // fetch data one halte
   const fetchData = async (park: any) => {
-    const req = await fetch(
-      BASE_URL + "/terminal/" + park.properties.PARK_ID
-    );
+    const req = await fetch(BASE_URL + "/terminal/" + park.properties.PARK_ID);
     const newData = await req.json();
     return setDetailHalte(newData.data);
   };
@@ -202,8 +187,11 @@ export default function Map(props: MapProps) {
       .then((data) => {
         const date = new Date();
         data.data.bus.forEach((element: any) => {
-          const parsedData = new Date(date.getTime() + (element.estimate * 60000))
-          element.finalTime = parsedData.getHours() + ":" + parsedData.getMinutes();
+          const parsedData = new Date(
+            date.getTime() + element.estimate * 60000
+          );
+          element.finalTime =
+            parsedData.getHours() + ":" + parsedData.getMinutes();
         });
 
         setBusEstimation(data.data.bus);
@@ -218,8 +206,11 @@ export default function Map(props: MapProps) {
             .then((data) => {
               const date = new Date();
               data.data.bus.forEach((element: any) => {
-                const parsedData = new Date(date.getTime() + (element.estimate * 60000))
-                element.finalTime = parsedData.getHours() + ":" + parsedData.getMinutes();
+                const parsedData = new Date(
+                  date.getTime() + element.estimate * 60000
+                );
+                element.finalTime =
+                  parsedData.getHours() + ":" + parsedData.getMinutes();
               });
               setBusEstimation(data.data.bus);
             });
@@ -230,7 +221,7 @@ export default function Map(props: MapProps) {
 
   // fetch all halte
   const fetchAllHalte = async () => {
-    if(isUserPosition) {
+    if (isUserPosition) {
       const payload = {
         lat: lat,
         long: lng,
@@ -717,7 +708,7 @@ export default function Map(props: MapProps) {
                               onClick={() => {
                                 DetailHalteByID(val.id);
                                 setIsHalte(false);
-                                
+
                                 setActiveParkById(val.id);
                                 setIsHalteClicked(true);
                                 getHalteClickedById(val.id);
@@ -939,103 +930,12 @@ export default function Map(props: MapProps) {
             </div>
           </div>
 
-          {/* donts */}
-          <div
-            className={
-              isDonts === false
-                ? "hidden"
-                : "flex h-[100%] justify-center overflow-y-scroll no-scrollbar"
-            }
-          >
-            <div id="front3" className={styles.donts}>
-              <div className="flex flex-col h-[100%] items-center justify-center ">
-                <button
-                  className="pr-3 py-3 absolute top-0 right-0 lg:px-3"
-                  onClick={() => {
-                    setIsDonts(false);
-                  }}
-                >
-                  <p className="bg-white text-xl text-black-primary">X</p>
-                </button>
-                <div className="flex flex-col text-center pb-2">
-                  <p className="text-lg font-bold">Dos and Dont’s Bikun</p>
-                </div>
-                <div className="flex flex-row space-x-2 w-full px-6 py-4 h-20">
-                  <div className="w-1/5 mx-auto flex justify-center items-center">
-                    <Image src={gambar1} alt="" />
-                  </div>
-                  <p className="w-4/5 my-auto">
-                    Tertib dan dahulukan penumpang turun, please!
-                  </p>
-                </div>
-                <hr className="h-[1px] border-[1px] border-[#d4d4d4]" />
-                <div className="flex flex-row space-x-2 w-full px-6 py-4 h-20">
-                  <div className="w-1/5 mx-auto flex justify-center items-center">
-                    <Image src={gambar2} alt="" />
-                  </div>
-                  <p className="w-4/5 my-auto">
-                    Tetap gunakan masker dan jaga protokol kesehatan, ya!
-                  </p>
-                </div>
-                <hr className="h-[1px] border-[1px] border-[#d4d4d4]" />
-                <div className="flex flex-row space-x-2 w-full px-6 py-4 h-20">
-                  <div className="w-1/5 mx-auto flex justify-center items-center">
-                    <Image src={gambar3} alt="" />
-                  </div>
-                  <p className="w-4/5 my-auto">
-                    Ucapkan terima kasih kepada supir sebelum turun guys!
-                  </p>
-                </div>
-                <hr className="h-[1px] border-[1px] border-[#d4d4d4]" />
-                <div className="flex flex-row space-x-2 w-full px-6 py-4 h-20">
-                  <div className="w-1/5 mx-auto flex justify-center items-center">
-                    <Image src={gambar4} alt="" />
-                  </div>
-                  <p className="w-4/5 my-auto">
-                    Jangan berkerumun pada bagian tengah bikun ya {":("}
-                  </p>
-                </div>
-                <hr className="h-[1px] border-[1px] border-[#d4d4d4]" />
-                <div className="flex flex-row space-x-2 w-full px-6 py-4 h-20">
-                  <div className="w-1/5 mx-auto flex justify-center items-center">
-                    <Image src={gambar5} alt="" />
-                  </div>
-                  <p className="w-4/5 my-auto">
-                    Jangan buang sampah sembarangan!
-                  </p>
-                </div>
-                <hr className="h-[1px] border-[1px] border-[#d4d4d4]" />
-                <div className="flex flex-row space-x-2 w-full px-6 py-4 h-20">
-                  <div className="w-1/5 mx-auto flex justify-center items-center">
-                    <Image src={gambar6} alt="" />
-                  </div>
-                  <p className="w-4/5 my-auto">
-                    Waspada dan cegah pelecehan seksual serta pencurian!
-                  </p>
-                </div>
-                <hr className="pb-4" />
-
-                <button className="rounded-full bg-blue-primary">
-                  <p
-                    className="flex items-center justify-center font-semibold text-base text-white h-10 px-16"
-                    onClick={() => {
-                      setIsDonts(false);
-                    }}
-                  >
-                    Baik, saya mengerti
-                  </p>
-                </button>
-              </div>
-            </div>
-          </div>
-
           {/* handle detail halte */}
           {activePark === null ? (
             <></>
           ) : (
             <>
               {" "}
-              
               <div className="absolute bottom-[40%] w-full">
                 <div id="front1" className="h-screen">
                   <Draggable
@@ -1055,7 +955,6 @@ export default function Map(props: MapProps) {
                         >
                           X
                         </div>
-                        
                       </div>
 
                       <div className="p-4">
@@ -1143,12 +1042,10 @@ export default function Map(props: MapProps) {
                                 href={{
                                   pathname: "/jadwal-bikun",
                                   query: {
-                                    park: activePark.properties.NAME
-                                }
+                                    park: activePark.properties.NAME,
+                                  },
                                 }}
-                                
                                 className="px-6 h-10 rounded-full flex items-center justify-center bg-blue-primary "
-                                
                               >
                                 <p className="text-white font-semibold">
                                   Lihat jadwal rutin
