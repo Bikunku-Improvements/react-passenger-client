@@ -27,6 +27,7 @@ import iconBus7 from "./iconBus/IconBus7";
 import iconBus8 from "./iconBus/IconBus8";
 import iconBus9 from "./iconBus/IconBus9";
 import iconBus10 from "./iconBus/IconBus10";
+import iconBus11 from "./iconBus/IconBus11";
 import styles from "./Map.module.css";
 import RoutineMachine from "./RoutineMachine";
 import RoutineMachine2 from "./RoutineMachine2";
@@ -564,6 +565,14 @@ export default function Map(props: MapProps) {
                       <Marker
                         position={[val?.lat, val?.long]}
                         icon={iconBus10}
+                      ></Marker>
+                    </>
+                  ) : val?.number === 11 ? (
+                    <>
+                      {" "}
+                      <Marker
+                        position={[val?.lat, val?.long]}
+                        icon={iconBus11}
                       ></Marker>
                     </>
                   ) : (
